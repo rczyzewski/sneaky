@@ -1,5 +1,5 @@
 
-package io.github.rczyzewski.sneaky;
+package io.github.rczyzewski.tortilla;
 
 import lombok.SneakyThrows;
 import lombok.experimental.UtilityClass;
