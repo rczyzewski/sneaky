@@ -32,7 +32,7 @@ public final class Tortilla
     }
 
     @SneakyThrows
-    public static <R> R supplierWrap(CheckedSupplier<R> checkedSupplier)
+    private static <R> R supplierWrap(CheckedSupplier<R> checkedSupplier)
     {
         return checkedSupplier.get();
     }
