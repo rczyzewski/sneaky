@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -20,42 +19,41 @@ public class TortillaExampleTest
         Stream.generate(() -> {
                   try {
                       return FooClass.generate();
-                  } catch (IOException e) {
-                      throw new RuntimeException(e);
+                  } catch (FancyCheckedException e) {
+                      throw new FancyRuntimeException(e);
                   }
               })
-            .limit(10)
-            .map(it -> {
-                try {
-                    return om.readValue(it, Integer.class);
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
-                }
-            })
-            .map(it -> it + 3)
-            .map(it -> {
-                try {
-                    return om.writeValueAsString(it);
-                } catch (JsonProcessingException e) {
-                    throw new RuntimeException(e);
-                }
-            })
-            .forEach(s -> {
-                try {
-                    FooClass.consume(s);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-            });
+              .limit(10)
+              .map(it -> {
+                  try {
+                      return om.readValue(it, Integer.class);
+                  } catch (JsonProcessingException e) {
+                      throw new FancyRuntimeException(e);
+                  }
+              })
+              .map(it -> it + 3)
+              .map(it -> {
+                  try {
+                      return om.writeValueAsString(it);
+                  } catch (JsonProcessingException e) {
+                      throw new FancyRuntimeException(e);
+                  }
+              })
+              .forEach(s -> {
+                  try {
+                      FooClass.consume(s);
+                  } catch (FancyCheckedException e) {
+                      throw new FancyRuntimeException(e);
+                  }
+              });
 
     }
-
 
     @Test
     void sneakyWrapFlow()
     {
         Stream.generate(Tortilla.wrapCallable(FooClass::generate))
-                .limit(10)
+              .limit(10)
               .map(Tortilla.wrap(it -> om.readValue(it, Integer.class)))
               .map(it -> it + 3)
               .map(Tortilla.wrap(om::writeValueAsString))
@@ -63,14 +61,28 @@ public class TortillaExampleTest
     }
 }
 
-@Slf4j
-class  FooClass {
+class FooClass
+{
 
-     static String generate() throws IOException {
-         return "1234";
-     }
-     static void consume(String s ) throws IOException {
-         log.info("the string '{}' has been consumed", s);
-     }
+    static String generate()
+        throws FancyCheckedException
+    {
+        return "1234";
+    }
 
- }
+    static void consume(String s)
+        throws FancyCheckedException
+    {
+    }
+}
+
+class FancyCheckedException extends Exception {}
+
+class FancyRuntimeException extends RuntimeException
+{
+    FancyRuntimeException(Throwable cause)
+    {
+        super(cause);
+    }
+
+}
