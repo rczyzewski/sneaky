@@ -1,5 +1,9 @@
-The original idea of this utility was inspired by lombok.
-Together with vavr and lombok it can turn you java code upside down, so it might look more like this:
+The initial version of the code and the idea comes from my colleague.
+Thank you, [Pablo](https://github.com/pablocrossa).
+It has been inspired by [SneakyThrow](https://projectlombok.org/features/SneakyThrows). 
+
+It's useful while writing code with stream processing. It just looks better, in my humble opinion.
+
 ```java
 class SneakyWrapSample
 {
