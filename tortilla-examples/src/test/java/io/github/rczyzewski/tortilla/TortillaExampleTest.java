@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import java.util.stream.Stream;
 
 @Slf4j
-public class TortillaExampleTest
+class TortillaExampleTest
 {
 
     private final static ObjectMapper om = new ObjectMapper();

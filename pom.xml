@@ -11,7 +11,7 @@
 
     <modules>
         <module>tortilla</module>
-        <module>examples</module>
+        <module>tortilla-examples</module>
     </modules>
 </project>
 
