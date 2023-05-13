@@ -7,6 +7,34 @@
   <groupId>io.github.rczyzewski</groupId>
   <artifactId>tortilla</artifactId>
   <version>0.1.1</version>
+  <packaging>jar</packaging>
+
+  <name>tortilla</name>
+  <description>utility for wrapping unwanted exceptions</description>
+  <url>https://github.com/rczyzewski/tortilla</url>
+
+  <licenses>
+    <license>
+      <name>MIT License</name>
+      <url>http://www.opensource.org/licenses/mit-license.php</url>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <name>Rafal Czyzewski</name>
+      <email>rafal.czyzewski@gmail.com</email>
+      <organization>rczyzewski</organization>
+      <organizationUrl>https://github.com/rczyzewski</organizationUrl>
+    </developer>
+  </developers>
+
+  <scm>
+    <connection>scm:git:git://github.com/rczyzewski/tortilla.git</connection>
+    <developerConnection>scm:git:ssh://github.com:rczyzewski/tortilla.git</developerConnection>
+    <url>https://github.com/rczyzewski/tortilla/tree/main</url>
+  </scm>
+
   <build>
     <plugins>
       <plugin>
