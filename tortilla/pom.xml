@@ -6,7 +6,7 @@
 
   <groupId>io.github.rczyzewski</groupId>
   <artifactId>tortilla</artifactId>
-  <version>0.1.1</version>
+  <version>0.1.1-RC1</version>
   <packaging>jar</packaging>
 
   <name>tortilla</name>
@@ -36,10 +36,11 @@
   </scm>
 
   <distributionManagement>
-    <snapshotRepository>
+    <repository>
       <id>ossrh</id>
-      <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
-    </snapshotRepository>
+      <name>Central Repository OSSRH</name>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+    </repository>
   </distributionManagement>
 
   <build>
@@ -121,7 +122,7 @@
       <plugin>
         <groupId>org.sonatype.plugins</groupId>
         <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>1.6.7</version>
+        <version>1.6.13</version>
         <extensions>true</extensions>
         <configuration>
           <serverId>ossrh</serverId>
