@@ -1,5 +1,9 @@
 package io.github.rczyzewski.tortilla;
 
+import io.github.rczyzewski.tortilla.functions.CheckedBiFunction;
+import io.github.rczyzewski.tortilla.functions.CheckedConsumer;
+import io.github.rczyzewski.tortilla.functions.CheckedFunction;
+import io.github.rczyzewski.tortilla.functions.CheckedRunnable;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -18,17 +22,17 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 
 @Slf4j
-public class TortillaTests
+class TortillaTests
 {
 
     @SneakyThrows
     @Test
-    public void wrapTest()
+    void wrapTest()
     {
-        Tortilla.CheckedFunction<String, String> function = Mockito.mock(CheckedStringFunction.class);
+        CheckedFunction<String, String> function = Mockito.mock(CheckedStringFunction.class);
         Mockito.when(function.apply(Mockito.anyString())).thenReturn("FOO").thenThrow(new IOException());
 
-        Function<String, String> wrapped = Tortilla.wrap(function);
+        Function<String, String> wrapped = SneakyTortilla.wrap(function);
 
         assertThat(wrapped.apply("foo")).isEqualTo("FOO");
 
@@ -39,13 +43,13 @@ public class TortillaTests
 
     @Test
     @SneakyThrows
-    public void biWrapTest()
+    void biWrapTest()
     {
-        Tortilla.CheckedBiFunction<String, String, String> function = Mockito.mock(CheckedStringBiFunction.class);
+        CheckedBiFunction<String, String, String> function = Mockito.mock(CheckedStringBiFunction.class);
         Mockito.when(function.apply(Mockito.anyString(), Mockito.anyString())).thenReturn("ABC").thenThrow(
             new IOException());
 
-        BiFunction<String, String, String> wrapped = Tortilla.wrap(function);
+        BiFunction<String, String, String> wrapped = SneakyTortilla.wrap(function);
 
         assertThat(wrapped.apply("foo", "bar")).isEqualTo("ABC");
 
@@ -56,34 +60,34 @@ public class TortillaTests
 
     @Test
     @SneakyThrows
-    public void runnableWrapHappyDayTest()
+    void runnableWrapHappyDayTest()
     {
-        Tortilla.CheckedRunnable checkedRunnable = Mockito.mock(Tortilla.CheckedRunnable.class);
+        CheckedRunnable checkedRunnable = Mockito.mock(CheckedRunnable.class);
         Mockito.doNothing().when(checkedRunnable).run();
-        Runnable wrapped = Tortilla.wrapRunnable(checkedRunnable);
+        Runnable wrapped = SneakyTortilla.wrapRunnable(checkedRunnable);
         wrapped.run();
         Mockito.verify(checkedRunnable, times(1)).run();
     }
 
     @Test
     @SneakyThrows
-    public void runnableWrapRainyDayTest()
+    void runnableWrapRainyDayTest()
     {
-        Tortilla.CheckedRunnable checkedRunnable = Mockito.mock(Tortilla.CheckedRunnable.class);
+        CheckedRunnable checkedRunnable = Mockito.mock(CheckedRunnable.class);
         Mockito.doThrow(IOException.class).when(checkedRunnable).run();
-        Runnable wrapped = Tortilla.wrapRunnable(checkedRunnable);
+        Runnable wrapped = SneakyTortilla.wrapRunnable(checkedRunnable);
         assertThatThrownBy(wrapped::run).isInstanceOf(IOException.class);
 
     }
 
     @Test
     @SneakyThrows
-    public void callableTest()
+    void callableTest()
     {
         Callable<String> callable = Mockito.mock(StringCallable.class);
         Mockito.when(callable.call()).thenReturn("ABC").thenThrow(new IOException());
 
-        Supplier<String> wrapped = Tortilla.wrapCallable(callable);
+        Supplier<String> wrapped = SneakyTortilla.wrapCallable(callable);
 
         assertThat(wrapped.get()).isEqualTo("ABC");
 
@@ -93,13 +97,13 @@ public class TortillaTests
 
     @Test
     @SneakyThrows
-    public void consumerSunnyDayTest()
+    void consumerSunnyDayTest()
     {
-        Tortilla.CheckedConsumer<String> consumer = Mockito.mock(CheckedStringConsumer.class);
+        CheckedConsumer<String> consumer = Mockito.mock(CheckedStringConsumer.class);
 
         Mockito.doNothing().when(consumer).accept(anyString());
 
-        Consumer<String> wrapped = Tortilla.wrapConsumer(consumer);
+        Consumer<String> wrapped = SneakyTortilla.wrapConsumer(consumer);
 
         wrapped.accept("foo");
         Mockito.verify(consumer, times(1)).accept(anyString());
@@ -108,22 +112,22 @@ public class TortillaTests
 
     @Test
     @SneakyThrows
-    public void consumerRainyDayTest()
+     void consumerRainyDayTest()
     {
-        Tortilla.CheckedConsumer<String> consumer = Mockito.mock(CheckedStringConsumer.class);
+        CheckedConsumer<String> consumer = Mockito.mock(CheckedStringConsumer.class);
 
         Mockito.doThrow(IOException.class).when(consumer).accept(anyString());
 
-        Consumer<String> wrapped = Tortilla.wrapConsumer(consumer);
+        Consumer<String> wrapped = SneakyTortilla.wrapConsumer(consumer);
         assertThatThrownBy(() -> wrapped.accept("foo")).isInstanceOf(IOException.class);
 
     }
 
-    private interface CheckedStringFunction extends Tortilla.CheckedFunction<String, String> {}
+    private interface CheckedStringFunction extends CheckedFunction<String, String> {}
 
-    private interface CheckedStringBiFunction extends Tortilla.CheckedBiFunction<String, String, String> {}
+    private interface CheckedStringBiFunction extends CheckedBiFunction<String, String, String> {}
 
     private interface StringCallable extends Callable<String> {}
 
-    private interface CheckedStringConsumer extends Tortilla.CheckedConsumer<String> {}
+    private interface CheckedStringConsumer extends CheckedConsumer<String> {}
 }

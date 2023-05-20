@@ -1,7 +1,12 @@
 
 package io.github.rczyzewski.tortilla;
 
-import lombok.SneakyThrows;
+import io.github.rczyzewski.tortilla.functions.CheckedBiFunction;
+import io.github.rczyzewski.tortilla.functions.CheckedConsumer;
+import io.github.rczyzewski.tortilla.functions.CheckedFunction;
+import io.github.rczyzewski.tortilla.functions.CheckedRunnable;
+import io.github.rczyzewski.tortilla.functions.CheckedSupplier;
+import lombok.experimental.StandardException;
 import lombok.experimental.UtilityClass;
 
 import java.util.concurrent.Callable;
@@ -11,95 +16,70 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @UtilityClass
-public final class Tortilla
-{
-    @SneakyThrows
-    private static <T, U, R> R biFunctionWrap(CheckedBiFunction<T, U, R> checkedBiFunction, T t, U u)
-    {
-        return checkedBiFunction.apply(t, u);
+public final class Tortilla {
+
+    @StandardException
+    public static class Spoiled extends RuntimeException {
+
     }
 
-    @SneakyThrows
-    private static <T, R> R functionWrap(CheckedFunction<T, R> checkedFunction, T t)
-    {
-        return checkedFunction.apply(t);
+    public static <T, U, R> BiFunction<T, U, R> wrap(CheckedBiFunction<T, U, R> function) {
+        return (t, u) -> {
+            try {
+                return function.apply(t, u);
+            } catch (Exception e) {
+                throw new Spoiled(e);
+            }
+        };
     }
 
-    @SneakyThrows
-    private static void runnableWrap(CheckedRunnable checkedRunnable)
-    {
-        checkedRunnable.run();
+    public static <T, R> Function<T, R> wrap(CheckedFunction<T, R> function) {
+        return t ->
+        {
+            try {
+                return function.apply(t);
+            } catch (Exception e) {
+                throw new Spoiled(e);
+            }
+
+        };
     }
 
-    @SneakyThrows
-    private static <R> R supplierWrap(CheckedSupplier<R> checkedSupplier)
-    {
-        return checkedSupplier.get();
+    public static Runnable wrapRunnable(CheckedRunnable runnable) {
+        return () ->
+        {
+            try {
+                runnable.run();
+            } catch (Exception e) {
+                throw new Spoiled(e);
+            }
+        };
     }
 
-    @SneakyThrows
-    private static <T> void consumerWrap(CheckedConsumer<T> consumer, T t)
-    {
-        consumer.accept(t);
+    private static <R> Supplier<R> supplierWrap(CheckedSupplier<R> supplier) {
+        return () -> {
+            try {
+                return supplier.get();
+            } catch (Exception e) {
+                throw new Spoiled(e);
+            }
+        };
+
     }
 
-    public static <T, U, R> BiFunction<T, U, R> wrap(CheckedBiFunction<T, U, R> checkedFunction)
-    {
-        return (t, u) -> biFunctionWrap(checkedFunction, t, u);
+    public static <R> Supplier<R> wrapCallable(Callable<R> callable) {
+        return supplierWrap(callable::call);
+
     }
 
-    public static <T, R> Function<T, R> wrap(CheckedFunction<T, R> checkedFunction)
-    {
-        return t -> functionWrap(checkedFunction, t);
+    public static <R> Consumer<R> wrapConsumer(CheckedConsumer<R> consumer) {
+        return it -> {
+            try {
+                consumer.accept(it);
+            } catch (Exception e) {
+                throw new Spoiled(e);
+            }
+        };
     }
 
-    public static Runnable wrapRunnable(CheckedRunnable checkedRunnable)
-    {
-        return () -> runnableWrap(checkedRunnable);
-    }
-
-    public static <R> Supplier<R> wrapCallable(Callable<R> callable)
-    {
-        return () -> supplierWrap(callable::call);
-    }
-
-    public static <R> Consumer<R> wrapConsumer(CheckedConsumer<R> consumer)
-    {
-        return it -> consumerWrap(consumer, it);
-    }
-
-    @FunctionalInterface
-    public interface CheckedBiFunction<T, U, R>
-    {
-        R apply(T t, U u)
-            throws Exception;
-    }
-
-    @FunctionalInterface
-    public interface CheckedFunction<T, R>
-    {
-        R apply(T t)
-            throws Exception;
-    }
-
-    @FunctionalInterface
-    public interface CheckedRunnable
-    {
-        void run()
-            throws Exception;
-    }
-
-    @FunctionalInterface
-    public interface CheckedConsumer<T>
-    {
-        void accept(T t)
-            throws Exception;
-    }
-
-    @FunctionalInterface
-    public interface CheckedSupplier<R>
-    {
-        R get()
-            throws Exception;
-    }
 }

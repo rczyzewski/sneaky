@@ -6,6 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
 import java.util.stream.Stream;
+import static io.github.rczyzewski.tortilla.SneakyTortilla.*;
 
 @Slf4j
 class TortillaExampleTest
@@ -52,12 +53,12 @@ class TortillaExampleTest
     @Test
     void sneakyWrapFlow()
     {
-        Stream.generate(Tortilla.wrapCallable(FooClass::generate))
+        Stream.generate(wrapCallable(FooClass::generate))
               .limit(10)
-              .map(Tortilla.wrap(it -> om.readValue(it, Integer.class)))
+              .map(wrap(it -> om.readValue(it, Integer.class)))
               .map(it -> it + 3)
-              .map(Tortilla.wrap(om::writeValueAsString))
-              .forEach(Tortilla.wrapConsumer(FooClass::consume));
+              .map(wrap(om::writeValueAsString))
+              .forEach(wrapConsumer(FooClass::consume));
     }
 }
 
