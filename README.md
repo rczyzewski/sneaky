@@ -2,6 +2,19 @@ The initial version of the code and the idea comes from my colleague.
 Thank you, [Pablo](https://github.com/pablocrossa).
 It has been inspired by [SneakyThrow](https://projectlombok.org/features/SneakyThrows). 
 
+### Installation
+For maven users:  
+```xml
+<dependency>
+    <groupId>io.github.rczyzewski</groupId>
+    <artifactId>tortilla</artifactId>
+    <version>0.1.1-RC3</version>
+</dependency>
+```
+snippets for other build systems are available [here](https://central.sonatype.com/artifact/io.github.rczyzewski/tortilla/)
+
+### Example
+
 It's useful while writing code with stream processing. It just looks better, in my humble opinion.
 
 ```java

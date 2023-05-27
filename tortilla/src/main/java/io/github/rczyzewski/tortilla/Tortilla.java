@@ -15,6 +15,11 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+/***
+ *  The aim of this class is to wrap checked exception, into unchecked exception.
+ *  Its behavior is similar SneakyTortilla, however you might catch sneaked exception later, because all
+ *  exceptions thrown are Tortilla.Spoiled objects.
+ */
 @UtilityClass
 public final class Tortilla {
 

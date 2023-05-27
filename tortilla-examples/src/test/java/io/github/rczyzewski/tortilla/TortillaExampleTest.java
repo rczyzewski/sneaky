@@ -50,6 +50,14 @@ class TortillaExampleTest
 
     }
 
+    /**
+     * This is an example, how Tortilla project might make your life easier:
+     *
+     * FooClass::generate might throw CheckedException -> and it won't be accepted as a parm of Stream::generate
+     * om.readValue ->  throwing exception, can't be put directly as a param for Stream::map
+     * om::writeValueAsString is also throwing exception, can't be put directly as a param for Stream::map
+     * FooClass:consume throws a checked exception, compiler won't allow to pass it directly to forEach
+     */
     @Test
     void sneakyWrapFlow()
     {
