@@ -22,7 +22,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 
 @Slf4j
-class TortillaTests
+class SneakyTortillaTests
 {
 
     @Test
@@ -32,13 +32,12 @@ class TortillaTests
         CheckedFunction<String, String> function = Mockito.mock(CheckedStringFunction.class);
         Mockito.when(function.apply(Mockito.anyString())).thenReturn("FOO").thenThrow(new IOException());
 
-        Function<String, String> wrapped = Tortilla.wrap(function);
+        Function<String, String> wrapped = SneakyTortilla.wrap(function);
 
         assertThat(wrapped.apply("foo")).isEqualTo("FOO");
 
         assertThatThrownBy(() -> wrapped.apply("bar"))
-                .isInstanceOf(Tortilla.Spoiled.class)
-                .hasCauseInstanceOf(IOException.class);
+            .isInstanceOf(IOException.class);
 
     }
 
@@ -48,15 +47,14 @@ class TortillaTests
     {
         CheckedBiFunction<String, String, String> function = Mockito.mock(CheckedStringBiFunction.class);
         Mockito.when(function.apply(Mockito.anyString(), Mockito.anyString())).thenReturn("ABC").thenThrow(
-                new IOException());
+            new IOException());
 
-        BiFunction<String, String, String> wrapped = Tortilla.wrap(function);
+        BiFunction<String, String, String> wrapped = SneakyTortilla.wrap(function);
 
         assertThat(wrapped.apply("foo", "bar")).isEqualTo("ABC");
 
         assertThatThrownBy(() -> wrapped.apply("foo", "bar"))
-                .isInstanceOf(Tortilla.Spoiled.class)
-                .hasCauseInstanceOf(IOException.class);
+            .isInstanceOf(IOException.class);
 
     }
 
@@ -77,11 +75,9 @@ class TortillaTests
     {
         CheckedRunnable checkedRunnable = Mockito.mock(CheckedRunnable.class);
         Mockito.doThrow(IOException.class).when(checkedRunnable).run();
-        Runnable wrapped = Tortilla.wrapRunnable(checkedRunnable);
+        Runnable wrapped = SneakyTortilla.wrapRunnable(checkedRunnable);
+        assertThatThrownBy(wrapped::run).isInstanceOf(IOException.class);
 
-        assertThatThrownBy(wrapped::run)
-                .isInstanceOf(Tortilla.Spoiled.class)
-                .hasCauseInstanceOf(IOException.class);
     }
 
     @Test
@@ -91,13 +87,12 @@ class TortillaTests
         Callable<String> callable = Mockito.mock(StringCallable.class);
         Mockito.when(callable.call()).thenReturn("ABC").thenThrow(new IOException());
 
-        Supplier<String> wrapped = Tortilla.wrapCallable(callable);
+        Supplier<String> wrapped = SneakyTortilla.wrapCallable(callable);
 
         assertThat(wrapped.get()).isEqualTo("ABC");
 
         assertThatThrownBy(wrapped::get)
-                .isInstanceOf(Tortilla.Spoiled.class)
-                .hasCauseInstanceOf(IOException.class);
+            .isInstanceOf(IOException.class);
     }
 
     @Test
@@ -108,7 +103,7 @@ class TortillaTests
 
         Mockito.doNothing().when(consumer).accept(anyString());
 
-        Consumer<String> wrapped = Tortilla.wrapConsumer(consumer);
+        Consumer<String> wrapped = SneakyTortilla.wrapConsumer(consumer);
 
         wrapped.accept("foo");
         Mockito.verify(consumer, times(1)).accept(anyString());
@@ -117,16 +112,14 @@ class TortillaTests
 
     @Test
     @SneakyThrows
-    void consumerRainyDayTest()
+     void consumerRainyDayTest()
     {
         CheckedConsumer<String> consumer = Mockito.mock(CheckedStringConsumer.class);
 
         Mockito.doThrow(IOException.class).when(consumer).accept(anyString());
 
-        Consumer<String> wrapped = Tortilla.wrapConsumer(consumer);
-        assertThatThrownBy(() -> wrapped.accept("foo"))
-                .isInstanceOf(Tortilla.Spoiled.class)
-                .hasCauseInstanceOf(IOException.class);
+        Consumer<String> wrapped = SneakyTortilla.wrapConsumer(consumer);
+        assertThatThrownBy(() -> wrapped.accept("foo")).isInstanceOf(IOException.class);
 
     }
 

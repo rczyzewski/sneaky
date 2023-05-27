@@ -6,7 +6,7 @@
 
   <groupId>io.github.rczyzewski</groupId>
   <artifactId>tortilla</artifactId>
-  <version>0.1.1-RC2</version>
+  <version>0.1.1-RC3</version>
   <packaging>jar</packaging>
 
   <name>tortilla</name>
@@ -155,7 +155,7 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.18.26</version>
+      <version>1.18.28</version>
       <scope>provided</scope>
     </dependency>
     <!-- test dependencies -->
