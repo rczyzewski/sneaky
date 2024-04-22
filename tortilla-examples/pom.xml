@@ -6,7 +6,7 @@
 
   <groupId>io.github.rczyzewski</groupId>
   <artifactId>tortilla-examples</artifactId>
-  <version>0.1.1-RC3</version>
+  <version>0.1.1-RC4</version>
   <build>
     <plugins>
       <plugin>
@@ -32,6 +32,12 @@
   </properties>
 
   <dependencies>
+    <dependency>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-guava</artifactId>
+      <version>3.25.1</version>
+      <scope>test</scope>
+    </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
@@ -73,7 +79,7 @@
     <dependency>
       <groupId>io.github.rczyzewski</groupId>
       <artifactId>tortilla</artifactId>
-      <version>0.1.1-RC3</version>
+      <version>0.1.1-RC4</version>
     </dependency>
 
   </dependencies>
