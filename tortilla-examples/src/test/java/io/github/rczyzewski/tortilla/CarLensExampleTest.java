@@ -1,4 +1,4 @@
-package io.github.rczyzewski.tortilla.lens.car;
+package io.github.rczyzewski.tortilla;
 
 import io.github.rczyzewski.tortilla.lens.Lens;
 import lombok.Builder;
@@ -80,6 +80,27 @@ class CarLensExampleTest {
                 .focus(Piston.Lenses.operational)
                 .rebuildWith(true)
                 .apply(brokenCar);
+
+        assertThat(repairedCar.getId()).isEqualTo("foo");
+        assertThat(repairedCar.getEngine().getPiston().isOperational()).isTrue();
+        assertThat(repairedCar.getEngine().getSparkPlug().getState()).isEqualTo(SparkPlug.SparkPlugState.NORMAL);
+        verifyNotModified();
+    }
+    @Test
+    void engineExampleWithoutUsingLensPattern() {
+        Piston newPiston = brokenCar.getEngine()
+                .getPiston()
+                .withOperational(true);
+
+        SparkPlug newSparkPlug = brokenCar.getEngine()
+                .getSparkPlug()
+                .withState(SparkPlug.SparkPlugState.NORMAL);
+
+        Engine newEngine = brokenCar.getEngine()
+                .withPiston(newPiston)
+                .withSparkPlug(newSparkPlug);
+
+        Car repairedCar = brokenCar.withEngine(newEngine);
 
         assertThat(repairedCar.getId()).isEqualTo("foo");
         assertThat(repairedCar.getEngine().getPiston().isOperational()).isTrue();
