@@ -71,7 +71,7 @@ So it will look less like the below:
     }
 
 ```
-A full example is available [here](https://github.com/rczyzewski/tortilla/blob/main/examples/src/test/java/io/github/rczyzewski/tortilla/TortillaExampleTest.java).
+A full example is available [here](https://github.com/rczyzewski/tortilla/blob/main/tortilla-examples/src/test/java/io/github/rczyzewski/tortilla/TortillaExampleTest.java).
 
 #### Lenses
 Let's assume whe have a Car defined as follows:
@@ -109,5 +109,4 @@ Car repairedCar = Lens.focus(Car.Lenses.engine)
         .apply(brokenCar);
 ```
 
-Code snippets are taken from [here](https://github.com/rczyzewski/tortilla/blob/main/examples/src/test/java/io/github/rczyzewski/tortilla/CarLensExampleTest.java).
- 
+Code snippets are taken from [here](https://github.com/rczyzewski/tortilla/blob/main/tortilla-examples/src/test/java/io/github/rczyzewski/tortilla/CarLensExampleTest.java).
